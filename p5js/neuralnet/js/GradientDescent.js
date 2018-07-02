@@ -5,7 +5,7 @@ let m = 0;
 let b = 0;
 
 function doGradientDescent(){
-  let learningRate = 0.05;
+  let learningRate = 0.1;
   let error = 0;
   for (let i = 0; i < data.length; i++){
     let x = data[i].x;
