@@ -14,44 +14,44 @@ class NeuralNetwork {
     this.learningRate = 0.1;
   }
 
-  train(targets) {
+  train(given, target) {
+
     // Feed Forward
-    let inputs = Matrix.fromArray(inputArray);
-    let hidden = Matrix.multiply(this.weightsIH, inputs);
+    let input = Matrix.fromArray(given);
+    let hidden = Matrix.multiply(this.weightsIH, input);
     hidden.add(this.biasH);
     hidden.map(sigmoid);
-    let outputs = Matrix.multiply(this.weightsHO, hidden);
-    outputs.add(this.biasO);
-    outputs.map(sigmoid);
-    return outputs;
+    let output = Matrix.multiply(this.weightsHO, hidden);
+    output.add(this.biasO);
+    output.map(sigmoid);
+    return output;
 
-    // Back Propagation
-    let outputErrors = Matrix.subtract(targets, outputs);
-    let gradients = Matrix.map(outputs, dsigmoid);
-    gradients.multiply(outputErrors);
-    gradients.multiply(learningRate);
-    // Calculate Deltas
-    let hiddenT = Matrix.transpose(hidden);
-    let weightHODeltas = Matrix.multiply(gradients, hiddenT);
-    // Adjust weights by the Deltas
-    this.weightsHO.add(weightHODeltas);
-    // Adjust the bias by its deltas -> gradients
-    this.biasO.add(gradients);
+    // Back Propagation H->O
+    // Calculate error
+    let outputError = Matrix.subtract(target, output);
+    //Calculate gradient
+    let gradient = Matrix.map(output, dsigmoid);
+    gradient.multiply(outputError);
+    gradient.multiply(learningRate);
+    // Calculate deltas
+    let weightHODelta = Matrix.multiply(gradient, Matrix.transpose(hidden));
+    // Adjust weights by the deltas
+    this.weightsHO.add(weightHODelta);
+    // Adjust the bias by its deltas, which is just the gradient
+    this.biasO.add(gradient);
 
-    //Calculate hidden layer errors
-    let weightsHOT = Matrix.transpose(this.weightsHO);
-    let hiddenErrors = Matrix.multiply(weightsHOT, outputErrors);
-    //Calculate hidden gradient
+    // I->H
+    //Calculate error
+    let hiddenError = Matrix.multiply(Matrix.transpose(this.weightsHO), outputError);
+    //Calculate gradient
     let hiddenGradient = Matrix.map(hidden, dsigmoid);
-    hiddenGradient.multiply(hiddenErrors);
+    hiddenGradient.multiply(hiddenError);
     hiddenGradient.multiply(this.learningRate);
-
-    //Calculate I->H Deltas
-    let inputsT = Matrix.transpose(inputs);
-    let weightIHDeltas = Matrix.multiply(hiddenGradient, inputsT);
-
-    this.weightsIH.add(weightIHDeltas);
-    //Adjust the bias by its deltas -> gradients
+    //Calculate deltas
+    let weightIHDelta = Matrix.multiply(hiddenGradient, Matrix.transpose(input));
+    // Adjust weights by the deltas
+    this.weightsIH.add(weightIHDelta);
+    // Adjust the bias by its deltas, which is just the gradient
     this.biasH.add(hiddenGradient);
   }
 
