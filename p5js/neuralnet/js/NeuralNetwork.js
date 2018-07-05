@@ -14,9 +14,7 @@ class NeuralNetwork {
     this.learningRate = 0.1;
   }
 
-  train(given, target) {
-
-    // Feed Forward
+  feedforward(given) {
     let input = Matrix.fromArray(given);
     let hidden = Matrix.multiply(this.weightsIH, input);
     hidden.add(this.biasH);
@@ -25,6 +23,16 @@ class NeuralNetwork {
     output.add(this.biasO);
     output.map(sigmoid);
     return output;
+  }
+
+  train(input, target) {
+    // Feed Forward
+    let hidden = Matrix.multiply(this.weightsIH, input);
+    hidden.add(this.biasH);
+    hidden.map(sigmoid);
+    let output = Matrix.multiply(this.weightsHO, hidden);
+    output.add(this.biasO);
+    output.map(sigmoid);
 
     // Back Propagation H->O
     // Calculate error
@@ -32,7 +40,8 @@ class NeuralNetwork {
     //Calculate gradient
     let gradient = Matrix.map(output, dsigmoid);
     gradient.multiply(outputError);
-    gradient.multiply(learningRate);
+    gradient.multiply(this.learningRate);
+
     // Calculate deltas
     let weightHODelta = Matrix.multiply(gradient, Matrix.transpose(hidden));
     // Adjust weights by the deltas
@@ -40,7 +49,7 @@ class NeuralNetwork {
     // Adjust the bias by its deltas, which is just the gradient
     this.biasO.add(gradient);
 
-    // I->H
+    // Back Propagation I->H
     //Calculate error
     let hiddenError = Matrix.multiply(Matrix.transpose(this.weightsHO), outputError);
     //Calculate gradient
@@ -53,13 +62,17 @@ class NeuralNetwork {
     this.weightsIH.add(weightIHDelta);
     // Adjust the bias by its deltas, which is just the gradient
     this.biasH.add(hiddenGradient);
+
+    console.log("Learning Rate: " + this.learningRate);
+    console.log("Output Error: " + outputError.data[0]);
   }
 
-  sigmoid(x) {
-    return 1 / (1 + Math.exp(-x));
-  }
+}
 
-  dsigmoid(y) {
-    return y * (1 - y);
-  }
+function sigmoid(x) {
+  return 1 / (1 + Math.exp(-x));
+}
+
+function dsigmoid(y) {
+  return y * (1 - y);
 }

@@ -58,10 +58,10 @@ class Matrix {
   }
 
   static transpose(matrix) {
-    let result = new Matrix(matrix.rows, matrix.cols);
+    let result = new Matrix(matrix.cols, matrix.rows);
     for (let i = 0; i < matrix.rows; i++) {
       for (let j = 0; j < matrix.cols; j++) {
-        result.data[i][j] = matrix.data[j][i];
+        result.data[j][i] = matrix.data[i][j];
       }
     }
     return result;
