@@ -98,16 +98,19 @@ function prepareData(unformattedData, formattedData, label) {
 
 function trainEpoch(training) {
   shuffle(training, true);
-  // Train for one epoch
-  for (let i = 0; i < training.length; i++) {
-    let data = training[i];
-    let input = Array.from(data).map(x => x / 255);
-    let label = training[i].label;
-    let target = [0, 0, 0];
-    targets[label] = 1;
-    console.log(input);
-    console.log(target);
-    nn.train(input, target);
+  // train n epochs
+  n = 10
+  for (let j = 0; j < n; j++) {
+    // Train for one epoch
+    for (let i = 0; i < training.length; i++) {
+      let data = training[i];
+      let input = Array.from(data).map(x => x / 255);
+      let label = training[i].label;
+      let target = [0, 0, 0];
+      target[label] = 1;
+      console.log("Epoch: " + j + " Count: " + i + "/" + training.length);
+      nn.train(input, target);
+    }
   }
 }
 
@@ -116,16 +119,20 @@ function testAll(testing) {
   // Train for one epoch
   for (let i = 0; i < testing.length; i++) {
     let data = testing[i];
-    let inputs = Array.from(data).map(x => x / 255);
+    let input = Array.from(data).map(x => x / 255);
     let label = testing[i].label;
-    let guess = nn.predict(inputs);
+    let guess = nn.predict(input);
 
     let m = max(guess);
     let classification = guess.indexOf(m);
-    if (classification === label) {
+    console.log(guess);
+    console.log("Classification: " + classification + " label: " + label);
+    if (classification == label) {
       correct++;
     }
   }
+  console.log(testing.length);
+  console.log(correct);
   let percent = 100 * correct / testing.length;
   return percent;
 }

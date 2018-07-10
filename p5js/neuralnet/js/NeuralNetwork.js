@@ -65,7 +65,7 @@ class NeuralNetwork {
     // Adjust the bias by its deltas, which is just the gradient
     this.biasH.add(hiddenGradient);
 
-    console.log("Learning Rate: " + this.learningRate + " Output Error: " + outputError.data);
+    // console.log("Learning Rate: " + this.learningRate + " Output Error: " + outputError.data);
   }
 
 }
