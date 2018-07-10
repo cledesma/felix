@@ -9,17 +9,16 @@ let trainingData = [
 function setup() {
   createCanvas(400, 400);
   nn = new NeuralNetwork(2, 2, 1);
-  nn.learningRate = 0.1
-  for (let i = 0; i < 10000; i++) {
+  nn.learningRate = 0.05
+  for (let i = 0; i < 100000; i++) {
     let data = random(trainingData);
-    let input = Matrix.fromArray(data.input);
-    let target = Matrix.fromArray(data.target);
-    nn.train(input, target);
+    console.log("Count: " + i);
+    nn.train(data.input, data.target);
   }
-  console.log("0,1 (1) -> " + nn.feedforward([0,1]).data[0]);
-  console.log("1,0 (1) -> " + nn.feedforward([1,0]).data[0]);
-  console.log("1,1 (0) -> " + nn.feedforward([1,1]).data[0]);
-  console.log("0,0 (0) -> " + nn.feedforward([0,0]).data[0]);
+  console.log("0,1 (1) -> " + nn.predict([0,1]));
+  console.log("1,0 (1) -> " + nn.predict([1,0]));
+  console.log("1,1 (0) -> " + nn.predict([1,1]));
+  console.log("0,0 (0) -> " + nn.predict([0,0]));
 }
 
 function draw(){

@@ -65,18 +65,19 @@ function setup() {
       let bright = img.pixels[i * 4];
       inputs[i] = (255 - bright) / 255.0;
     }
+    let guess = nn.predict(inputs);
+    let m = max(guess);
+    let classification = guess.indexOf(m);
+    if (classification === CAT) {
+      console.log("cat");
+    } else if (classification === TRAIN) {
+      console.log("train");
+    } else if (classification === RAINBOW) {
+      console.log("rainbow");
+    }
+
   });
 
-  let guess = nn.predict(inputs);
-  let m = max(guess);
-  let classification = guess.indexOf(m);
-  if (classification === CAT) {
-    console.log("cat");
-  } else if (classification === TRAIN) {
-    console.log("train");
-  } else if (classification === RAINBOW) {
-    console.log("rainbow");
-  }
 }
 
 function prepareData(unformattedData, formattedData, label) {
@@ -97,13 +98,16 @@ function prepareData(unformattedData, formattedData, label) {
 
 function trainEpoch(training) {
   shuffle(training, true);
+  // Train for one epoch
   for (let i = 0; i < training.length; i++) {
     let data = training[i];
-    let inputs = Array.from(data).map(x => x / 255);
+    let input = Array.from(data).map(x => x / 255);
     let label = training[i].label;
-    let targets = [0, 0, 0];
+    let target = [0, 0, 0];
     targets[label] = 1;
-    nn.train(inputs, targets);
+    console.log(input);
+    console.log(target);
+    nn.train(input, target);
   }
 }
 
@@ -114,7 +118,7 @@ function testAll(testing) {
     let data = testing[i];
     let inputs = Array.from(data).map(x => x / 255);
     let label = testing[i].label;
-    let guess = nn.feedforward(inputs);
+    let guess = nn.predict(inputs);
 
     let m = max(guess);
     let classification = guess.indexOf(m);

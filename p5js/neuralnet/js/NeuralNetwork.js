@@ -11,22 +11,23 @@ class NeuralNetwork {
     this.biasO = new Matrix(this.outputNodes, 1);
     this.biasH.randomize();
     this.biasO.randomize();
-    this.learningRate = 0.1;
+    this.learningRate = 0.05;
   }
 
-  feedforward(given) {
-    let input = Matrix.fromArray(given);
+  predict(inputArray) {
+    let input = Matrix.fromArray(inputArray);
     let hidden = Matrix.multiply(this.weightsIH, input);
     hidden.add(this.biasH);
     hidden.map(sigmoid);
     let output = Matrix.multiply(this.weightsHO, hidden);
     output.add(this.biasO);
     output.map(sigmoid);
-    return output;
+    return output.toArray();
   }
 
-  train(input, target) {
+  train(inputArray, targetArray) {
     // Feed Forward
+    let input = Matrix.fromArray(inputArray);
     let hidden = Matrix.multiply(this.weightsIH, input);
     hidden.add(this.biasH);
     hidden.map(sigmoid);
@@ -36,6 +37,7 @@ class NeuralNetwork {
 
     // Back Propagation H->O
     // Calculate error
+    let target = Matrix.fromArray(targetArray);
     let outputError = Matrix.subtract(target, output);
     //Calculate gradient
     let gradient = Matrix.map(output, dsigmoid);
@@ -63,8 +65,7 @@ class NeuralNetwork {
     // Adjust the bias by its deltas, which is just the gradient
     this.biasH.add(hiddenGradient);
 
-    console.log("Learning Rate: " + this.learningRate);
-    console.log("Output Error: " + outputError.data[0]);
+    console.log("Learning Rate: " + this.learningRate + " Output Error: " + outputError.data);
   }
 
 }
