@@ -10,7 +10,7 @@ module.exports = function() {
   NeuralNetwork = require('./NeuralNetwork.js');
   nn = new NeuralNetwork(2, 2, 1);
   nn.learningRate = 0.05
-  for (let i = 0; i < 200000; i++) {
+  for (let i = 0; i < 300000; i++) {
     // Randomize
     let data = trainingData[Math.floor(Math.random() * trainingData.length)];
     console.log("Count: " + i);

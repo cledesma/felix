@@ -1,9 +1,9 @@
 const express = require('express')
 const app = express()
-const nnDemo = require('./xor.js')
+const xor = require('./xor.js')
 
 app.get('/', function(req, res) {
-  nnDemo();
+  xor();
   res.send('Hello World!');
 });
 
