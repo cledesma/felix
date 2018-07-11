@@ -1,7 +1,9 @@
 const express = require('express')
 const app = express()
+const nnDemo = require('./NNDemo.js')
 
 app.get('/', function(req, res) {
+  nnDemo();
   res.send('Hello World!');
 });
 
