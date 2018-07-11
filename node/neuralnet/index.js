@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const nnDemo = require('./NNDemo.js')
+const nnDemo = require('./xor.js')
 
 app.get('/', function(req, res) {
   nnDemo();

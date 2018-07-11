@@ -1,4 +1,4 @@
-var NNDemo = function() {
+module.exports = function() {
 
   let trainingData = [
     {input: [0,0], target: [0]},
@@ -7,10 +7,10 @@ var NNDemo = function() {
     {input: [1,0], target: [1]}
   ]
 
-  const NeuralNetwork = require('./NeuralNetwork.js');
+  NeuralNetwork = require('./NeuralNetwork.js');
   nn = new NeuralNetwork(2, 2, 1);
   nn.learningRate = 0.05
-  for (let i = 0; i < 1000000; i++) {
+  for (let i = 0; i < 200000; i++) {
     // Randomize
     let data = trainingData[Math.floor(Math.random() * trainingData.length)];
     console.log("Count: " + i);
@@ -22,4 +22,3 @@ var NNDemo = function() {
   console.log("0,0 (0) -> " + nn.predict([0,0]));
 
 };
-module.exports = NNDemo;
