@@ -2,7 +2,8 @@ const express = require('express')
 const app = express()
 const xor = require('./xor.js')
 
-app.get('/', function(req, res) {
+app.use(express.static('public'));
+app.get('/xor', function(req, res) {
   xor();
   res.send('Hello World!');
 });

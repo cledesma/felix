@@ -7,7 +7,7 @@ module.exports = function() {
     {input: [1,0], target: [1]}
   ]
 
-  NeuralNetwork = require('./NeuralNetwork.js');
+  NeuralNetwork = require('./lib/NeuralNetwork.js');
   nn = new NeuralNetwork(2, 2, 1);
   nn.learningRate = 0.05
   for (let i = 0; i < 300000; i++) {
