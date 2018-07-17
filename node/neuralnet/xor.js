@@ -1,5 +1,6 @@
-module.exports = function() {
+const lodash = require('lodash')
 
+module.exports = function() {
   let trainingData = [
     {input: [0,0], target: [0]},
     {input: [0,1], target: [1]},
@@ -12,7 +13,7 @@ module.exports = function() {
   nn.learningRate = 0.05
   for (let i = 0; i < 300000; i++) {
     // Randomize
-    let data = trainingData[Math.floor(Math.random() * trainingData.length)];
+    let data = lodash.sample(trainingData);
     console.log("Count: " + i);
     nn.train(data.input, data.target);
   }
