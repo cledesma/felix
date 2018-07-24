@@ -36,9 +36,9 @@ module.exports = function () {
     ]);
 
     async function train() {
-        for (let i = 0; i < 10000; i++) {
+        for (let i = 0; i < 50000; i++) {
             const response = await model.fit(xs, ys);
-            console.log(response.history.loss[0]);
+            console.log("Iteration: " + i + " Error: " + response.history.loss[0]);
         }
     }
 
