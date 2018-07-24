@@ -1,13 +1,12 @@
-let tf = require('@tensorflow/tfjs');
-// Load the binding
-require('@tensorflow/tfjs-node');
-
 class NeuralNetworkTF {
 
     constructor(inputs, hidden, outputs, lr) {
 
-        this.model = tf.sequential();
-        tf.tensor([[[1, 2], [3, 4]]]).print();
+        this.tf = require('@tensorflow/tfjs');
+        require('@tensorflow/tfjs-node'); // Load the binding
+
+        this.model = this.tf.sequential();
+        this.tf.tensor([[[1, 2], [3, 4]]]).print();
     }
 
 }
