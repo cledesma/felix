@@ -3,4 +3,5 @@ build
 npm-debug.log
 .env
 env/
+.vscode
 .DS_Store
