@@ -1,1 +1,1 @@
-gcloud functions deploy hello_func --runtime python37 --trigger-http --region asia-northeast1 --memory 128
+gcloud functions deploy verify --runtime python37 --trigger-http --region asia-northeast1 --memory 128
