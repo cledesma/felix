@@ -103,7 +103,7 @@ def detect_document_texts(document_image_uri):
     words_that_matter = detect_entities(all_text)
     return words_that_matter
 
-def verify_doc_image(keywords1, keywords2):
+def find_hits(keywords1, keywords2):
     hit = []
     for keyword1 in keywords1:
         for keyword2 in keywords2:
