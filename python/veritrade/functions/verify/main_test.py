@@ -2,10 +2,20 @@
 
 import main
 
-def test_verify():
+def test_verify_doc_image():
     main.verify_doc_image(
         main.detect_document_texts('gs://veritrade/original_bill_of_loading.jpg'), 
         main.detect_labels('gs://veritrade/lubricants.jpg'))
+
+def test_verify_goods_doc():
+    pass
+
+def test_the_longer_keyword():
+    assert main.the_longer_keyword("lubr", "lubricant") == "lubricant"
+    assert main.the_longer_keyword("them", "the") == "them"
+
+def test_verify_goods_image():
+    pass
 
 def test_is_match():
     assert main.is_match('lubricant', 'lubricants') == True

@@ -12,7 +12,7 @@ def verify(request):
 
         detect_entities(goods_declaration)
         detect_labels(goods_image_uri)
-        detect_texts(document_image_uri)
+        detect_document_texts(document_image_uri)
 
 def detect_entities(goods_declaration):
 
@@ -59,20 +59,20 @@ def detect_labels(goods_image_uri):
         print(label.score)
     return result
 
-# def detect_image_texts(image_uri):
+def detect_image_texts(image_uri):
 
-#     from google.cloud import vision
-#     client = vision.ImageAnnotatorClient()
-#     image = vision.types.Image()
-#     image.source.image_uri = image_uri
-#     texts = client.text_detection(image=image).text_annotations
-#     print("\n")
-#     print('=' * 20)
-#     print("Image Text")
-#     print('=' * 20)
-#     for text in texts:
-#         print(text.description)
-#     return texts
+    from google.cloud import vision
+    client = vision.ImageAnnotatorClient()
+    image = vision.types.Image()
+    image.source.image_uri = image_uri
+    texts = client.text_detection(image=image).text_annotations
+    print("\n")
+    print('=' * 20)
+    print("Image Text")
+    print('=' * 20)
+    for text in texts:
+        print(text.description)
+    return texts
 
 def detect_document_texts(document_image_uri):
 
@@ -103,17 +103,12 @@ def detect_document_texts(document_image_uri):
     words_that_matter = detect_entities(all_text)
     return words_that_matter
 
-def verify_doc_image(document_keywords, image_labels):
+def verify_doc_image(keywords1, keywords2):
     hit = []
-    print("\n")
-    print('=' * 20)
-    print("Verify Doc and Image")
-    print('=' * 20)
-    for document_keyword in document_keywords:
-        for image_label in image_labels:
-            if(is_match(document_keyword, image_label)):
-                hit.append(image_label)
-                print('{} from the document matches {} from the image'.format(document_keyword, image_label))
+    for keyword1 in keywords1:
+        for keyword2 in keywords2:
+            if(is_match(keyword1, keyword2)):
+                hit.append(the_longer_keyword(keyword1, keyword2))
     print("\n")
     print('=' * 20)
     print("Hit Summary")
@@ -127,3 +122,9 @@ def is_match(word1, word2):
         if (len(word1) > 2 and len(word2) > 2): 
             result = True
     return result
+
+def the_longer_keyword(w1, w2):
+    if len(w1) >= len(w2):
+        return w1
+    else:
+        return w2
