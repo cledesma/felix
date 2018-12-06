@@ -1,30 +1,35 @@
-def detect_labels(request):
-    from google.cloud import vision
-    from google.cloud import language
-    from google.cloud.language import enums
-    from google.cloud.language import types
-    import six
+def verify(request):
 
     request_json = request.get_json(silent=True)
     if request_json \
         and 'declarationOfGoods' in request_json \
         and 'documents' in request_json \
         and 'images' in request_json:
-        declaration_of_goods = request_json['declarationOfGoods']
+
+        goods_declaration = request_json['goodsDeclaration']
         document_image_uri = request_json['documentsUri'][0]
-        good_image_uri = request_json['imagesUri'][0]
+        goods_image_uri = request_json['imagesUri'][0]
 
-    # Analyze Declaration of Goods
+        detect_entities(goods_declaration)
+        detect_labels(goods_image_uri)
+        detect_texts(document_image_uri)
 
-    client = language.LanguageServiceClient()
-    if isinstance (declaration_of_goods, six.binary_type):
-        text = text.decode('utf-8')
-    document = types.Document(
-        content=declaration_of_goods,
-        type=enums.Document.Type.PLAIN_TEXT)
-    
+def detect_entities(goods_declaration):
+
+    from google.cloud import language_v1
+    from google.cloud.language_v1 import types
+    from google.cloud.language_v1 import enums
+    import six
+
+    content = goods_declaration
+    client = language_v1.LanguageServiceClient()
+    if isinstance (content, six.binary_type):
+        content = content.decode('utf-8')
+    document = {'type':  enums.Document.Type.PLAIN_TEXT, 'content': content}
+
     entities = client.analyze_entities(document).entities
-    entity_type = ('UNKNOWN', 'PERSON', 'LOCATION', 'ORGANIZATION', 'EVENT', 'WORK_OF_ART', 'CONSUMER_GOOD', 'OTHER')
+    entity_type = ('UNKNOWN', 'PERSON', 'LOCATION', 'ORGANIZATION', 
+        'EVENT', 'WORK_OF_ART', 'CONSUMER_GOOD', 'OTHER')
     print('=' * 20)
     print("Entities")
     print('=' * 20)
@@ -37,11 +42,12 @@ def detect_labels(request):
         print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
 
-    # Analyze Good Image
+def detect_labels(goods_image_uri):
 
+    from google.cloud import vision
     client = vision.ImageAnnotatorClient()
     image = vision.types.Image()
-    image.source.image_uri = good_image_uri
+    image.source.image_uri = goods_image_uri
     labels = client.label_detection(image=image).label_annotations
     print('=' * 20)
     print("Labels")
@@ -50,14 +56,15 @@ def detect_labels(request):
         print(label.description)
         print(label.score)
 
-    # Analyze Document
+def detect_texts(document_image_uri):
 
+    from google.cloud import vision
+    client = vision.ImageAnnotatorClient()
+    image = vision.types.Image()
+    image.source.image_uri = document_image_uri
+    texts = client.text_detection(image=image).text_annotations
     print('=' * 20)
     print("Document Text")
     print('=' * 20)
-    image.source.image_uri = document_image_uri
-    texts = client.text_detection(image=image).text_annotations
     for text in texts:
         print('\n"{}"').format(text.description)
-
-
