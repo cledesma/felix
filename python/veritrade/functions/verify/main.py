@@ -30,6 +30,7 @@ def detect_entities(goods_declaration):
     entities = client.analyze_entities(document).entities
     entity_type = ('UNKNOWN', 'PERSON', 'LOCATION', 'ORGANIZATION', 
         'EVENT', 'WORK_OF_ART', 'CONSUMER_GOOD', 'OTHER')
+    print('\n')
     print('=' * 20)
     print("Entities")
     print('=' * 20)
@@ -49,6 +50,7 @@ def detect_labels(goods_image_uri):
     image = vision.types.Image()
     image.source.image_uri = goods_image_uri
     labels = client.label_detection(image=image).label_annotations
+    print('\n')
     print('=' * 20)
     print("Labels")
     print('=' * 20)
@@ -63,8 +65,9 @@ def detect_texts(document_image_uri):
     image = vision.types.Image()
     image.source.image_uri = document_image_uri
     texts = client.text_detection(image=image).text_annotations
+    print("\n")
     print('=' * 20)
     print("Document Text")
     print('=' * 20)
     for text in texts:
-        print('\n"{}"').format(text.description)
+        print(text.description)
