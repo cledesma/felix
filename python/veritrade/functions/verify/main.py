@@ -34,14 +34,12 @@ def detect_entities(goods_declaration):
     print('=' * 20)
     print("Entities")
     print('=' * 20)
+    result = []
     for entity in entities:
+        result.append(entity.name)
         print(u'{:<16}: {}'.format('name', entity.name))
         print(u'{:<16}: {}'.format('salience', entity.salience))
-        # print(u'{:<16}: {}'.format('type', entity_type[entity.type]))
-        # print(u'{:<16}: {}'.format('metadata', entity.metadata))
-        # print(u'{:<16}: {}'.format('wikipedia_url',
-        #       entity.metadata.get('wikipedia_url', '-')))
-    return entities
+    return result
 
 def detect_labels(goods_image_uri):
 
@@ -54,25 +52,27 @@ def detect_labels(goods_image_uri):
     print('=' * 20)
     print("Labels")
     print('=' * 20)
+    result = []
     for label in labels:
+        result.append(label.description)
         print(label.description)
         print(label.score)
-    return labels
+    return result
 
-def detect_image_texts(image_uri):
+# def detect_image_texts(image_uri):
 
-    from google.cloud import vision
-    client = vision.ImageAnnotatorClient()
-    image = vision.types.Image()
-    image.source.image_uri = image_uri
-    texts = client.text_detection(image=image).text_annotations
-    print("\n")
-    print('=' * 20)
-    print("Image Text")
-    print('=' * 20)
-    for text in texts:
-        print(text.description)
-    return texts
+#     from google.cloud import vision
+#     client = vision.ImageAnnotatorClient()
+#     image = vision.types.Image()
+#     image.source.image_uri = image_uri
+#     texts = client.text_detection(image=image).text_annotations
+#     print("\n")
+#     print('=' * 20)
+#     print("Image Text")
+#     print('=' * 20)
+#     for text in texts:
+#         print(text.description)
+#     return texts
 
 def detect_document_texts(document_image_uri):
 
@@ -100,5 +100,30 @@ def detect_document_texts(document_image_uri):
     print("All Document Text")
     print('=' * 20)
     print(all_text )
-    entities = detect_entities(all_text)
-    return entities
+    words_that_matter = detect_entities(all_text)
+    return words_that_matter
+
+def verify_doc_image(document_keywords, image_labels):
+    hit = []
+    print("\n")
+    print('=' * 20)
+    print("Verify Doc and Image")
+    print('=' * 20)
+    for document_keyword in document_keywords:
+        for image_label in image_labels:
+            if(is_match(document_keyword, image_label)):
+                hit.append(image_label)
+                print('{} from the document matches {} from the image'.format(document_keyword, image_label))
+    print("\n")
+    print('=' * 20)
+    print("Hit Summary")
+    print('=' * 20)
+    print(hit)
+    return hit
+
+def is_match(word1, word2):
+    result = False
+    if (word1.upper() in word2.upper()) or (word2.upper() in word1.upper()):
+        if (len(word1) > 2 and len(word2) > 2): 
+            result = True
+    return result
