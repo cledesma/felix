@@ -1,5 +1,5 @@
 tf = require('@tensorflow/tfjs');
-require('@tensorflow/tfjs-node'); // Load the binding
+require('@tensorflow/tfjs-node'); 
 
 module.exports = function () {
 
